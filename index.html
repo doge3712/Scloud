@@ -7,18 +7,47 @@
 <section class="panel"><label for="track">SoundCloud-Link einfügen</label><div class="inputrow"><input id="track" type="url" inputmode="url" placeholder="https://soundcloud.com/artist/track" autocomplete="url"><button id="load" type="button">Track laden</button></div>
 <div class="hint">Füge den Link zu einem öffentlichen SoundCloud-Track ein.</div><div id="status" role="status" aria-live="polite"></div>
 <div id="result"><div class="trackhead"><img id="cover" class="cover" alt="Track-Cover" hidden><div><div id="title" class="tracktitle">SoundCloud-Track</div><div id="author" class="trackurl"></div><div id="urltext" class="trackurl"></div><a id="coverlink" class="coverlink" target="_blank" rel="noopener" hidden>Cover öffnen / speichern ↗</a></div></div>
-<iframe id="player" title="SoundCloud Player" allow="autoplay" scrolling="no"></iframe><div class="actions"><a id="open" class="secondary" target="_blank" rel="noopener">Auf SoundCloud öffnen ↗</a><button id="copy" class="secondary" type="button">Link kopieren</button></div></div>
+<iframe id="player" title="SoundCloud Player" allow="autoplay; fullscreen" scrolling="no"></iframe><div class="actions"><a id="open" class="secondary" target="_blank" rel="noopener">Auf SoundCloud öffnen ↗</a><button id="copy" class="secondary" type="button">Link kopieren</button></div></div>
 <div class="notice"><strong>Hinweis:</strong> SCLOUD nutzt den offiziellen SoundCloud-Player. Ein Cover kann angezeigt und separat geöffnet werden. MP3-/WAV-Dateien oder MP4-Konvertierungen werden nicht aus geschützten Streams extrahiert. Nutze Downloads nur, wenn der Künstler sie auf SoundCloud freigegeben hat.</div></section>
 <footer>SCLOUD ist ein unabhängiges Fan-Tool und nicht mit SoundCloud verbunden.</footer></main>
 <script>
 (()=>{const input=document.getElementById('track'),status=document.getElementById('status'),result=document.getElementById('result'),player=document.getElementById('player'),cover=document.getElementById('cover'),coverlink=document.getElementById('coverlink'),title=document.getElementById('title'),author=document.getElementById('author'),urltext=document.getElementById('urltext'),open=document.getElementById('open'),loadButton=document.getElementById('load');let currentUrl='';
-function validHost(h){h=h.toLowerCase();return h==='soundcloud.com'||h.endsWith('.soundcloud.com')}
-async function loadTrack(){const raw=input.value.trim();let parsed;try{parsed=new URL(raw)}catch{status.textContent='Bitte füge einen gültigen SoundCloud-Link ein.';result.style.display='none';return}
-if(parsed.protocol!=='https:'||!validHost(parsed.hostname)){status.textContent='Bitte nutze einen HTTPS-Link von soundcloud.com.';result.style.display='none';return}
-if(parsed.hostname.toLowerCase()==='soundcloud.com'&&parsed.pathname.split('/').filter(Boolean).length<2){status.textContent='Bitte füge einen direkten Link zu einem Track ein.';result.style.display='none';return}
-const cleanUrl=parsed.href.split('?')[0].replace(/\/+$/,'');currentUrl=cleanUrl;result.style.display='block';status.textContent='Track wird geladen …';title.textContent='SoundCloud-Track';author.textContent='';urltext.textContent=cleanUrl;cover.hidden=true;cover.removeAttribute('src');coverlink.hidden=true;coverlink.removeAttribute('href');open.href=cleanUrl;
-player.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(cleanUrl)+'&color=%23ff6a1a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true';loadButton.disabled=true;
-try{const endpoint='https://soundcloud.com/oembed?format=json&url='+encodeURIComponent(cleanUrl);const response=await fetch(endpoint,{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('oEmbed unavailable');const data=await response.json();if(data.title)title.textContent=data.title;if(data.author_name)author.textContent='Von '+data.author_name;if(data.thumbnail_url){cover.src=data.thumbnail_url;cover.hidden=false;coverlink.href=data.thumbnail_url;coverlink.hidden=false;cover.onerror=()=>{cover.hidden=true;coverlink.hidden=true}}status.textContent='Track-Informationen geladen. Falls der Player leer bleibt, ist das Einbetten für diesen Track möglicherweise deaktiviert.'}
-catch(e){status.textContent='Player eingebunden. Titel und Cover konnten nicht automatisch geladen werden – prüfe, ob der Track öffentlich ist und Einbettungen erlaubt.'}finally{loadButton.disabled=false}}
-document.getElementById('load').addEventListener('click',loadTrack);input.addEventListener('keydown',e=>{if(e.key==='Enter')loadTrack()});document.getElementById('copy').addEventListener('click',async()=>{if(!currentUrl)return;try{await navigator.clipboard.writeText(currentUrl);status.textContent='Link kopiert.'}catch{status.textContent='Kopieren nicht möglich – kopiere den Link bitte manuell.'}})})();
+function normalizeTrackUrl(raw){
+ const u=new URL(raw);
+ if(u.protocol!=='https:')throw new Error('Bitte einen HTTPS-Link verwenden.');
+ const h=u.hostname.toLowerCase();
+ if(!(h==='soundcloud.com'||h.endsWith('.soundcloud.com')))throw new Error('Bitte einen Link von SoundCloud verwenden.');
+ if(h==='m.soundcloud.com'||h==='www.soundcloud.com')u.hostname='soundcloud.com';
+ u.search='';u.hash='';u.pathname=u.pathname.replace(/\/+$/,'');
+ if(u.hostname==='soundcloud.com'&&u.pathname.split('/').filter(Boolean).length<2)throw new Error('Bitte einen direkten Track-Link einfügen.');
+ return u.href;
+}
+async function loadTrack(){
+ let cleanUrl;try{cleanUrl=normalizeTrackUrl(input.value.trim())}catch(e){status.textContent=e.message||'Ungültiger SoundCloud-Link.';result.style.display='none';return}
+ currentUrl=cleanUrl;result.style.display='block';status.textContent='SoundCloud-Player wird geladen …';title.textContent='SoundCloud-Track';author.textContent='';urltext.textContent=cleanUrl;cover.hidden=true;cover.removeAttribute('src');coverlink.hidden=true;coverlink.removeAttribute('href');open.href=cleanUrl;player.removeAttribute('src');
+ loadButton.disabled=true;
+ try{
+   const endpoint='https://soundcloud.com/oembed?format=json&url='+encodeURIComponent(cleanUrl)+'&maxheight=450&color=ff6a1a';
+   const response=await fetch(endpoint,{headers:{'Accept':'application/json'}});
+   if(!response.ok)throw new Error('SoundCloud konnte diesen Track nicht einbetten (HTTP '+response.status+').');
+   const data=await response.json();
+   if(data.title)title.textContent=data.title;
+   if(data.author_name)author.textContent='Von '+data.author_name;
+   if(data.thumbnail_url){cover.src=data.thumbnail_url;cover.hidden=false;coverlink.href=data.thumbnail_url;coverlink.hidden=false;cover.onerror=()=>{cover.hidden=true;coverlink.hidden=true}}
+   if(!data.html)throw new Error('SoundCloud hat keinen Player-Code für diesen Track zurückgegeben.');
+   const parsed=new DOMParser().parseFromString(data.html,'text/html');
+   const returnedFrame=parsed.querySelector('iframe');
+   if(!returnedFrame||!returnedFrame.src)throw new Error('SoundCloud hat einen ungültigen Player-Code zurückgegeben.');
+   const embedUrl=new URL(returnedFrame.getAttribute('src'), 'https://w.soundcloud.com');
+   if(embedUrl.hostname!=='w.soundcloud.com')throw new Error('Unerwartete Player-Adresse von SoundCloud.');
+   player.src=embedUrl.href;
+   const height=Number(returnedFrame.getAttribute('height'));if(height>=150&&height<=600)player.style.height=height+'px';
+   status.textContent='Player erfolgreich von SoundCloud geladen.';
+ }catch(e){
+   status.textContent=(e.message||'Der Player konnte nicht geladen werden.')+' Öffne den Track testweise direkt auf SoundCloud; möglicherweise sind Einbettungen deaktiviert.';
+   player.removeAttribute('src');
+ }finally{loadButton.disabled=false}
+}
+document.getElementById('load').addEventListener('click',loadTrack);input.addEventListener('keydown',e=>{if(e.key==='Enter')loadTrack()});document.getElementById('copy').addEventListener('click',async()=>{if(!currentUrl)return;try{await navigator.clipboard.writeText(currentUrl);status.textContent='Link kopiert.'}catch{status.textContent='Kopieren nicht möglich – kopiere den Link bitte manuell.'}});
+})();
 </script></body></html>
