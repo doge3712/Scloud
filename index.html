@@ -1,118 +1,24 @@
 <!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101010">
-  <title>SCLOUD — SoundCloud Player</title>
-  <style>
-    :root { color-scheme: dark; --orange:#ff6a1a; --bg:#0c0c0e; --panel:#171719; --muted:#a5a5aa; }
-    * { box-sizing:border-box }
-    body { margin:0; min-height:100vh; background:radial-gradient(ellipse at 50% -10%,#342016 0,transparent 45%),var(--bg); color:#f7f7f7; font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    main { width:min(720px, calc(100% - 32px)); margin:0 auto; padding:48px 0 64px; }
-    header { text-align:center; margin-bottom:32px }
-    .logo { font-weight:950; letter-spacing:.13em; font-size:38px }
-    .logo span { color:var(--orange) }
-    .sub { color:var(--muted); margin-top:4px }
-    .panel { background:rgba(23,23,25,.94); border:1px solid #2b2b2e; border-radius:22px; padding:22px; box-shadow:0 18px 60px #0006; }
-    label { display:block; font-weight:700; margin-bottom:10px }
-    .inputrow { display:flex; gap:10px }
-    input { min-width:0; flex:1; border:1px solid #39393e; background:#0f0f11; color:white; border-radius:12px; padding:15px 14px; font-size:16px; outline:none }
-    input:focus { border-color:var(--orange); box-shadow:0 0 0 3px #ff6a1a22 }
-    button { border:0; background:var(--orange); color:#17100c; font-weight:850; border-radius:12px; padding:0 20px; font-size:15px; cursor:pointer }
-    button:active { transform:scale(.98) }
-    .hint { color:var(--muted); font-size:13px; margin:10px 2px 0 }
-    #result { display:none; margin-top:22px }
-    .trackhead { display:flex; gap:15px; align-items:center; margin-bottom:16px }
-    .cover { width:84px; height:84px; border-radius:14px; background:#262629; object-fit:cover; flex:none }
-    .tracktitle { font-weight:800; overflow-wrap:anywhere }
-    .trackurl { color:var(--muted); font-size:13px; overflow-wrap:anywhere }
-    iframe { width:100%; height:166px; border:0; border-radius:14px; background:#111 }
-    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px }
-    .secondary { background:#29292d; color:#fff; padding:12px 15px; text-decoration:none; border-radius:11px; font-weight:700; font-size:14px }
-    .notice { border-left:3px solid var(--orange); background:#211811; padding:13px 15px; border-radius:8px; color:#e7d8ce; font-size:13px; margin-top:20px }
-    #status { color:#ffb58c; font-size:14px; margin-top:12px; min-height:20px }
-    footer { text-align:center; color:#777; font-size:12px; margin-top:26px }
-    @media(max-width:520px) { main{padding-top:32px}.inputrow{flex-direction:column}button{padding:14px}.panel{padding:17px}.logo{font-size:33px} }
-  </style>
-</head>
-<body>
-<main>
-  <header>
-    <div class="logo">SC<span>LOUD</span></div>
-    <div class="sub">SoundCloud-Tracks an einem Ort öffnen</div>
-  </header>
-  <section class="panel">
-    <label for="track">SoundCloud-Link einfügen</label>
-    <div class="inputrow">
-      <input id="track" type="url" inputmode="url" placeholder="https://soundcloud.com/artist/track" autocomplete="url">
-      <button id="load">Track laden</button>
-    </div>
-    <div class="hint">Füge den vollständigen Link zu einem öffentlichen SoundCloud-Track ein.</div>
-    <div id="status" role="status" aria-live="polite"></div>
-    <div id="result">
-      <div class="trackhead">
-        <img id="cover" class="cover" alt="Track-Cover" src="">
-        <div>
-          <div id="title" class="tracktitle">SoundCloud-Track</div>
-          <div id="urltext" class="trackurl"></div>
-        </div>
-      </div>
-      <iframe id="player" title="SoundCloud Player" allow="autoplay" scrolling="no"></iframe>
-      <div class="actions">
-        <a id="open" class="secondary" target="_blank" rel="noopener">Auf SoundCloud öffnen ↗</a>
-        <button id="copy" class="secondary" type="button">Link kopieren</button>
-      </div>
-    </div>
-    <div class="notice">
-      <strong>Hinweis zu Downloads:</strong> SCLOUD zeigt den offiziellen SoundCloud-Player und verlinkt den Original-Track. MP3-/WAV-Dateien oder MP4-Konvertierungen werden nicht aus geschützten Streams extrahiert. Wenn der Künstler einen Download freigegeben hat, nutze bitte die Download-Funktion auf SoundCloud.
-    </div>
-  </section>
-  <footer>SCLOUD ist ein unabhängiges Fan-Tool und nicht mit SoundCloud verbunden.</footer>
-</main>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101010"><title>SCLOUD — SoundCloud Player</title>
+<style>
+:root{color-scheme:dark;--o:#ff6a1a;--bg:#0c0c0e;--p:#171719;--m:#a5a5aa}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#342016 0,transparent 45%),var(--bg);color:#f7f7f7;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(720px,calc(100% - 32px));margin:auto;padding:42px 0 64px}header{text-align:center;margin-bottom:30px}.logo{font-weight:950;letter-spacing:.13em;font-size:38px}.logo span{color:var(--o)}.sub,.trackurl{color:var(--m)}.panel{background:rgba(23,23,25,.96);border:1px solid #2b2b2e;border-radius:22px;padding:22px;box-shadow:0 18px 60px #0006}label{display:block;font-weight:700;margin-bottom:10px}.inputrow{display:flex;gap:10px}input{min-width:0;flex:1;border:1px solid #39393e;background:#0f0f11;color:white;border-radius:12px;padding:15px 14px;font-size:16px}button,.secondary{border:0;background:var(--o);color:#17100c;font-weight:850;border-radius:12px;padding:13px 18px;font-size:15px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.secondary{background:#29292d;color:#fff;font-size:14px}.hint{color:var(--m);font-size:13px;margin:10px 2px 0}#result{display:none;margin-top:22px}.trackhead{display:flex;gap:15px;align-items:center;margin-bottom:16px}.cover{width:100px;height:100px;border-radius:14px;background:#262629;object-fit:cover;flex:none}.tracktitle{font-weight:800;overflow-wrap:anywhere}.trackurl{font-size:13px;overflow-wrap:anywhere;margin-top:4px}a.coverlink{display:inline-block;color:#ffad80;font-size:13px;margin-top:6px}iframe{width:100%;height:166px;border:0;border-radius:14px;background:#111}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.notice{border-left:3px solid var(--o);background:#211811;padding:13px 15px;border-radius:8px;color:#e7d8ce;font-size:13px;margin-top:20px}#status{color:#ffb58c;font-size:14px;margin-top:12px;min-height:20px}footer{text-align:center;color:#777;font-size:12px;margin-top:26px}@media(max-width:520px){main{padding-top:30px}.inputrow{flex-direction:column}button{width:100%}.panel{padding:17px}.logo{font-size:33px}.cover{width:84px;height:84px}}
+</style></head><body><main>
+<header><div class="logo">SC<span>LOUD</span></div><div class="sub">SoundCloud-Tracks an einem Ort öffnen</div></header>
+<section class="panel"><label for="track">SoundCloud-Link einfügen</label><div class="inputrow"><input id="track" type="url" inputmode="url" placeholder="https://soundcloud.com/artist/track" autocomplete="url"><button id="load" type="button">Track laden</button></div>
+<div class="hint">Füge den Link zu einem öffentlichen SoundCloud-Track ein.</div><div id="status" role="status" aria-live="polite"></div>
+<div id="result"><div class="trackhead"><img id="cover" class="cover" alt="Track-Cover" hidden><div><div id="title" class="tracktitle">SoundCloud-Track</div><div id="author" class="trackurl"></div><div id="urltext" class="trackurl"></div><a id="coverlink" class="coverlink" target="_blank" rel="noopener" hidden>Cover öffnen / speichern ↗</a></div></div>
+<iframe id="player" title="SoundCloud Player" allow="autoplay" scrolling="no"></iframe><div class="actions"><a id="open" class="secondary" target="_blank" rel="noopener">Auf SoundCloud öffnen ↗</a><button id="copy" class="secondary" type="button">Link kopieren</button></div></div>
+<div class="notice"><strong>Hinweis:</strong> SCLOUD nutzt den offiziellen SoundCloud-Player. Ein Cover kann angezeigt und separat geöffnet werden. MP3-/WAV-Dateien oder MP4-Konvertierungen werden nicht aus geschützten Streams extrahiert. Nutze Downloads nur, wenn der Künstler sie auf SoundCloud freigegeben hat.</div></section>
+<footer>SCLOUD ist ein unabhängiges Fan-Tool und nicht mit SoundCloud verbunden.</footer></main>
 <script>
-(() => {
-  const input = document.getElementById('track');
-  const status = document.getElementById('status');
-  const result = document.getElementById('result');
-  const player = document.getElementById('player');
-  const cover = document.getElementById('cover');
-  const title = document.getElementById('title');
-  const urltext = document.getElementById('urltext');
-  const open = document.getElementById('open');
-  let currentUrl = '';
-
-  function loadTrack() {
-    const raw = input.value.trim();
-    let parsed;
-    try { parsed = new URL(raw); } catch { status.textContent = 'Bitte füge einen gültigen SoundCloud-Link ein.'; result.style.display='none'; return; }
-    if (!['soundcloud.com','www.soundcloud.com','m.soundcloud.com'].includes(parsed.hostname.toLowerCase())) {
-      status.textContent = 'Das ist kein SoundCloud-Link. Bitte nutze soundcloud.com.'; result.style.display='none'; return;
-    }
-    const cleanUrl = parsed.origin + parsed.pathname.replace(/\/+$/, '');
-    if (cleanUrl.split('/').filter(Boolean).length < 2) {
-      status.textContent = 'Bitte füge einen direkten Link zu einem Track ein.'; result.style.display='none'; return;
-    }
-    currentUrl = cleanUrl;
-    const encoded = encodeURIComponent(cleanUrl);
-    player.src = 'https://w.soundcloud.com/player/?url=' + encoded + '&color=%23ff6a1a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true';
-    open.href = cleanUrl;
-    urltext.textContent = cleanUrl;
-    title.textContent = 'SoundCloud-Track';
-    cover.src = 'https://a-v2.sndcdn.com/assets/images/sc-icons/ios-a iTunes app icon.svg'.replace('a iTunes','a-iTunes');
-    cover.onerror = () => { cover.removeAttribute('src'); };
-    result.style.display = 'block';
-    status.textContent = 'Player wird geladen …';
-    player.onload = () => { status.textContent = 'Wenn der Player nicht erscheint, öffne den Track direkt auf SoundCloud.'; };
-  }
-  document.getElementById('load').addEventListener('click', loadTrack);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') loadTrack(); });
-  document.getElementById('copy').addEventListener('click', async () => {
-    if (!currentUrl) return;
-    try { await navigator.clipboard.writeText(currentUrl); status.textContent='Link kopiert.'; }
-    catch { status.textContent='Kopieren nicht möglich – markiere den Link oben und kopiere ihn manuell.'; }
-  });
-})();
-</script>
-</body>
-</html>
+(()=>{const input=document.getElementById('track'),status=document.getElementById('status'),result=document.getElementById('result'),player=document.getElementById('player'),cover=document.getElementById('cover'),coverlink=document.getElementById('coverlink'),title=document.getElementById('title'),author=document.getElementById('author'),urltext=document.getElementById('urltext'),open=document.getElementById('open'),loadButton=document.getElementById('load');let currentUrl='';
+function validHost(h){h=h.toLowerCase();return h==='soundcloud.com'||h.endsWith('.soundcloud.com')}
+async function loadTrack(){const raw=input.value.trim();let parsed;try{parsed=new URL(raw)}catch{status.textContent='Bitte füge einen gültigen SoundCloud-Link ein.';result.style.display='none';return}
+if(parsed.protocol!=='https:'||!validHost(parsed.hostname)){status.textContent='Bitte nutze einen HTTPS-Link von soundcloud.com.';result.style.display='none';return}
+if(parsed.hostname.toLowerCase()==='soundcloud.com'&&parsed.pathname.split('/').filter(Boolean).length<2){status.textContent='Bitte füge einen direkten Link zu einem Track ein.';result.style.display='none';return}
+const cleanUrl=parsed.href.split('?')[0].replace(/\/+$/,'');currentUrl=cleanUrl;result.style.display='block';status.textContent='Track wird geladen …';title.textContent='SoundCloud-Track';author.textContent='';urltext.textContent=cleanUrl;cover.hidden=true;cover.removeAttribute('src');coverlink.hidden=true;coverlink.removeAttribute('href');open.href=cleanUrl;
+player.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(cleanUrl)+'&color=%23ff6a1a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true';loadButton.disabled=true;
+try{const endpoint='https://soundcloud.com/oembed?format=json&url='+encodeURIComponent(cleanUrl);const response=await fetch(endpoint,{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('oEmbed unavailable');const data=await response.json();if(data.title)title.textContent=data.title;if(data.author_name)author.textContent='Von '+data.author_name;if(data.thumbnail_url){cover.src=data.thumbnail_url;cover.hidden=false;coverlink.href=data.thumbnail_url;coverlink.hidden=false;cover.onerror=()=>{cover.hidden=true;coverlink.hidden=true}}status.textContent='Track-Informationen geladen. Falls der Player leer bleibt, ist das Einbetten für diesen Track möglicherweise deaktiviert.'}
+catch(e){status.textContent='Player eingebunden. Titel und Cover konnten nicht automatisch geladen werden – prüfe, ob der Track öffentlich ist und Einbettungen erlaubt.'}finally{loadButton.disabled=false}}
+document.getElementById('load').addEventListener('click',loadTrack);input.addEventListener('keydown',e=>{if(e.key==='Enter')loadTrack()});document.getElementById('copy').addEventListener('click',async()=>{if(!currentUrl)return;try{await navigator.clipboard.writeText(currentUrl);status.textContent='Link kopiert.'}catch{status.textContent='Kopieren nicht möglich – kopiere den Link bitte manuell.'}})})();
+</script></body></html>
